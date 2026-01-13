@@ -6,6 +6,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\PaymentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +71,23 @@ Route::middleware('auth')->group(function () {
     // Route::post('/checkout', [CheckoutController::class, 'form'])->name('checkout.preview');
     // Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
+    // Buy Now
+    Route::post('/buy-now/{product}', [CheckoutController::class, 'buyNow'])
+        ->name('buy.now')
+        ->middleware('auth');
+
+
+    // Route::post('/products/{product}/review', [ReviewController::class, 'store'])
+    // ->middleware('auth')
+    // ->name('review.store');
+
+    Route::middleware('auth')->group(function () {
+    Route::post('/products/{product}/review', [ReviewController::class, 'store'])
+        ->name('review.store');
+});
+
+
+
     // Checkout
     Route::post('/checkout/preview', [CheckoutController::class, 'form'])
         ->name('checkout.preview');
@@ -86,7 +108,40 @@ Route::middleware('auth')->group(function () {
         Route::delete('/products/delete/{id}', 'destroy')->name('products.destroy');
     });
 
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])
+        ->name('wishlist');
+
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
+
+    Route::post('/wishlist/remove/{id}', [WishlistController::class, 'remove'])
+        ->name('wishlist.remove');
+
+
 });
+
+// Route::get('/', [App\Http\Controllers\RajaOngkirController::class, 'index']);
+
+Route::get('/ongkir', [RajaOngkirController::class, 'index']);
+Route::get('/cities/{province_id}', [RajaOngkirController::class, 'getCities']);
+Route::get('/districts/{cityId}', [RajaOngkirController::class, 'getDistricts']);
+Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
+// Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/checkout/payment', function () {
+        return view('checkout.payment');
+    })->name('checkout.payment');
+
+    Route::post('/midtrans/token', [PaymentController::class, 'createSnapToken'])
+        ->name('midtrans.token');
+});
+
+Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
+
 
 /*
 |--------------------------------------------------------------------------

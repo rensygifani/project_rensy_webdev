@@ -29,6 +29,10 @@
                     🛒 Cart
                 </a>
 
+                <a href="{{ route('wishlist') }}" class="btn pastel-outline">
+                    ❤️ Wishlist
+                </a>
+
                 <a href="{{ route('orders') }}" class="btn pastel-outline">
                     Orders
                 </a>

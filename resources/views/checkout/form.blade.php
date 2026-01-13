@@ -10,7 +10,15 @@
 @foreach($items as $item)
 
 {{-- PENTING: kirim ulang item id --}}
-<input type="hidden" name="items[]" value="{{ $item->id }}">
+
+@if(isset($mode) && $mode === 'buy_now')
+    <input type="hidden" name="mode" value="buy_now">
+    <input type="hidden" name="product_id" value="{{ $item->product->id }}">
+@else
+    <input type="hidden" name="items[]" value="{{ $item->id }}">
+@endif
+
+
 
 <div class="card p-3 mb-2 d-flex flex-row gap-3 align-items-center">
     <img src="{{ asset('storage/'.$item->product->image) }}"
@@ -54,3 +62,4 @@
 
 </form>
 @endsection
+
